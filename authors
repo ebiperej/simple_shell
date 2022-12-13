@@ -12,5 +12,6 @@ cd "$(dirname "$(readlink -f "$BASH_SOURCE")")/.."
 	EOH
 	echo
 	git log --format='%aN <%aE>' | sort -uf
+	git shortlog -sne
 } > AUTHORS
 
