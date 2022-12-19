@@ -7,7 +7,7 @@
  *
  * Return: Success: 0 | Failure: -1
  */
-int main(char *argc, char **argv)
+int main(int argc, char **argv)
 {
 	pid_t pid;
 	size_t size = 18;
@@ -21,14 +21,18 @@ int main(char *argc, char **argv)
 		return (-1);
 	}
 
+
+	
 	while (1)
 	{
 		printf("#cisfun$ ");
-		if (getline(&lineptr, &size, stdin) == -1)
+		getline(&lineptr, &size, stdin);
+
+		if (feof(stdin))
 		{
-			perror(argv[0]);
-			continue;
+			return (0);
 		}
+
 		*(lineptr + strlen(lineptr) - 1) = '\0'; /* replace \n by \0 */
 		
 		cmv = malloc((strlen(lineptr) * sizeof(char)) + 5);
@@ -59,7 +63,13 @@ int main(char *argc, char **argv)
 		{
 			wait(NULL);
 		}
+		
+		if (!isatty(STDIN_FILENO))
+		{
+			return (0);
+		}
+	
 	}
 	free(lineptr);
 	return (0);
-}		
+}

@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-
+char *remove_newline(char *buf);
+char **tokenize_str(char *buf, const char *delim);
+void execute_cmd(char **argv);
 
 #endif
