@@ -30,12 +30,15 @@ int main(int argc, char **argv)
 
 		if (feof(stdin))
 		{
-			return (0);
+			exit(EXIT_SUCCESS);
 		}
 
-		*(lineptr + strlen(lineptr) - 1) = '\0'; /* replace \n by \0 */
-		
-		cmv = malloc((strlen(lineptr) * sizeof(char)) + 5);
+		//*(lineptr + strlen(lineptr) - 1) = '\0'; /* replace \n by \0 */
+	
+		lineptr = remove_whitespace(lineptr);
+
+		cmv = tokenize_str(lineptr, " ");
+/*		cmv = malloc((strlen(lineptr) * sizeof(char)) + 5);
 
 		if (!cmv)
 		{
@@ -44,26 +47,9 @@ int main(int argc, char **argv)
 		}
 		cmv[0] = lineptr;
 		cmv[1] = NULL;
-
-		pid = fork();
-		if (pid == -1)
-		{
-			perror(argv[0]);
-			continue;
-		}
-		else if (pid == 0)
-		{
-			if (execve(lineptr, cmv, NULL) == -1)
-			{
-				perror(argv[0]);
-				continue;
-			}
-		}
-		else
-		{
-			wait(NULL);
-		}
-		
+		*/
+		execute_cmd(cmv);
+	
 		if (!isatty(STDIN_FILENO))
 		{
 			return (0);
