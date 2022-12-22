@@ -23,24 +23,23 @@ char *read_line(void)
 			exit(EXIT_FAILURE);
 		}
 	}
-	
+
 	lineptr = remove_whitespace(lineptr);
 	return (lineptr);
 }
 
 /**
- * remove_whitespace - removes white spaces \n, ' ', \t 
+ * remove_whitespace - removes white spaces \n, ' ', \t
  * @str: string
  *
  * Return: pointer to line
  */
 char *remove_whitespace(char *str)
 {
-//	int len = strlen(str) - 1;
 	/* remove white space at the end */
 
 	*(str + (strlen(str) - 1)) = '\0';
-	
+
 	/* remove whitespace at the beginning */
 	while (*str == ' ' || *str == '\t' || *str == '\n')
 		str++;
@@ -58,17 +57,15 @@ char *remove_whitespace(char *str)
 char **tokenize_str(char *str, const char *delim)
 {
 	char **tokens;
-        int idx = 0;
+	int idx = 0;
 
-        tokens = malloc(strlen(str) * sizeof(char) + 5);
+	tokens = malloc(strlen(str) * sizeof(char) + 5);
+	tokens[idx] = strtok(str, delim);
 
-        tokens[idx] = strtok(str, delim);
-
-        while (tokens[idx])
-        {
-                ++idx;
-                tokens[idx] = strtok(NULL, delim);
-        }
-
-        return (tokens);
+	while (tokens[idx])
+	{
+		++idx;
+		tokens[idx] = strtok(NULL, delim);
+	}
+	return (tokens);
 }
