@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		if(isatty(STDIN_FILENO))
+		if (isatty(STDIN_FILENO))
 		{
 			printf("#cisfun$ ");
 		}
