@@ -3,9 +3,10 @@
 /**
  * execute_cmd - execute command
  * @argv: argument vector
+ * @tokens: tokens
  * Return: 1 on success
  */
-int execute_cmd(char **argv)
+int execute_cmd(char **argv, char **tokens)
 {
 	pid_t pid;
 
@@ -17,7 +18,7 @@ int execute_cmd(char **argv)
 	}
 	else if (pid == 0)
 	{
-		if (execve(argv[0], argv, NULL) == -1)
+		if (execve(tokens[0], tokens, NULL) == -1)
 		{
 			perror(argv[0]);
 			exit(EXIT_FAILURE);

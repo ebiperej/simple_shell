@@ -1,5 +1,6 @@
 #include "shell.h"
 
+
 /**
  * main - Entry level to simple shell
  * @argc: argument count
@@ -9,35 +10,34 @@
  */
 int main(int argc, char **argv)
 {
-	size_t size = 18;
-	char *lineptr;
-	char **cmv;
+	size_t size = 0;
+	char *lineptr = NULL;
+	char **tokens;
+	int status = 1;
+	const char *delim = " ";
+	(void)(argc);
 
-	lineptr = malloc(size * sizeof(char));
-	if (!lineptr)
-	{
-		perror(argv[argc - argc]);
-		return (-1);
-	}
 
-	while (1)
+	while (status)
 	{
-		if(isatty(STDIN_FILENO))
+		if (isatty(STDIN_FILENO))
 		{
 			printf("#cisfun$ ");
 		}
-		getline(&lineptr, &size, stdin);
-
-		if (feof(stdin))
+		if (getline(&lineptr, &size, stdin) == -1)
 		{
-			exit(EXIT_SUCCESS);
+			free(lineptr);
+			if (feof(stdin))
+				exit(EXIT_SUCCESS);
+			perror(argv[0]);
+			exit(EXIT_FAILURE);
 		}
 
 		lineptr = remove_whitespace(lineptr);
 
-		cmv = tokenize_str(lineptr, " ");
-		execute_cmd(cmv);
-		free(cmv);
+		tokens = tokenize_str(lineptr, delim);
+		execute_cmd(argv, tokens);
+		free(tokens);
 	}
 	free(lineptr);
 	return (0);

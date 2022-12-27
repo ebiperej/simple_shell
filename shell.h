@@ -10,6 +10,6 @@
 char *read_line(void);
 char *remove_whitespace(char *str);
 char **tokenize_str(char *str, const char *delim);
-int execute_cmd(char **argv);
+int execute_cmd(char **argv, char **tokens);
 
 #endif
