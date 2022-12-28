@@ -59,7 +59,7 @@ char **tokenize_str(char *str, const char *delim)
 	char **tokens;
 	int idx = 0;
 
-	tokens = malloc(strlen(str) * sizeof(char) + 5);
+	tokens = malloc(1024 * sizeof(char *));
 	tokens[idx] = strtok(str, delim);
 
 	while (tokens[idx])
