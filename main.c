@@ -28,15 +28,15 @@ int main(int argc, char **argv)
 		{
 			free(lineptr);
 			if (feof(stdin))
-				exit(EXIT_SUCCESS);
+				exit(EXIT_SUCCESS);	
 			perror(argv[0]);
 			exit(EXIT_FAILURE);
 		}
 
-		lineptr = remove_whitespace(lineptr);
-
+		*(lineptr + (strlen(lineptr) - 1)) = '\0';	
 		tokens = tokenize_str(lineptr, delim);
-		execute_cmd(argv, tokens);
+		if (tokens[0] != NULL)
+			execute_cmd(argv, tokens);
 		free(tokens);
 	}
 	free(lineptr);
