@@ -15,9 +15,13 @@ int main(int argc, char **argv)
 	char **tokens;
 	int status = 1;
 	const char *delim = " ";
+	char *path;
 	(void)(argc);
 
 
+
+	printf("%s\n", append_path("bin","ls"));
+	return (1);
 	while (status)
 	{
 		if (isatty(STDIN_FILENO))
@@ -35,6 +39,7 @@ int main(int argc, char **argv)
 
 		*(lineptr + (strlen(lineptr) - 1)) = '\0';	
 		tokens = tokenize_str(lineptr, delim);
+		
 		if (tokens[0] != NULL)
 			execute_cmd(argv, tokens);
 		free(tokens);

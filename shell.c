@@ -52,3 +52,75 @@ char **tokenize_str(char *str, const char *delim)
 	}
 	return (tokens);
 }
+
+/**
+ * append_path - append command to paths
+ * @path: path
+ * @command: enter command
+ *
+ * Return: buffer of appended path on success
+ * or NULL on failure
+ */
+char *append_path(char *path, char *command)
+{
+	int i, j = 0;
+	char *buf;
+
+	buf = malloc(sizeof(char) * (strlen(path) + strlen(command) + 2));
+	if (!buf)
+		return (NULL);
+
+	/* copy path into buf */
+	while (path[i] != '\0')
+	{
+		buf[i] = path[i];
+		i++;
+	}
+
+	/* append '/' to buf if path do not end with it */
+	if (path[i - 1] != '/')
+	{
+		buf[i] = '/';
+		i++;
+	}
+
+	/* append command to the buf */ 
+	while (command[j] != '\0')
+	{
+		buf[i + j] = command[j];
+		j++;
+	}
+	
+	buf[i + j] = '\0';
+
+	return (buf);
+}
+
+
+/**
+ * access_path - check if process can execute command in path
+ * @command: entered command
+ *
+ * Return: buffer to executable file path on success
+ * Null on failure
+ */
+char *access_path(char *command)
+{
+	char *paths, *path, *appended_buf;
+
+	paths = strdup(getenv("PATH"));
+
+	path = strtok(paths, ":");
+
+	while (path != NULL)
+	{
+		appended_buf = append_path(path, command);
+
+		if (access(appended_buf, F_OK | X_OK))
+			return (appended_buf);
+		
+		path = strtok(NULL, ":");
+	}
+	return ("dfad");
+}
+
