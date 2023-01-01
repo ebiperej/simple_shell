@@ -10,6 +10,7 @@
 int execute_cmd(char **argv, char *command, char **tokens)
 {
 	pid_t pid;
+	extern char **environ;
 
 	pid = fork();
 	if (pid == -1)
@@ -19,7 +20,7 @@ int execute_cmd(char **argv, char *command, char **tokens)
 	}
 	else if (pid == 0)
 	{
-		if (execve(command, tokens, NULL) == -1)
+		if (execve(command, tokens, environ) == -1)
 		{
 			perror(argv[0]);
 			exit(EXIT_FAILURE);
@@ -110,6 +111,13 @@ char *access_path(char *command)
 	char **paths, *path;
 	int i = 0;
 
+	/* check if command  is executable */
+	path = append_path("", command);
+	if (access(path, F_OK | X_OK) == 0)
+		return (path);
+
+	free(path);
+	
 	paths = get_paths();
 
 	while (paths[i])
@@ -125,8 +133,8 @@ char *access_path(char *command)
 		i++;
 	}
 	free(paths);
-	path = append_path("", command);
-	return (path);
+
+	return (NULL);
 }
 
 
