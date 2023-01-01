@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
 	size_t size = 0;
 	char *lineptr = NULL;
-	char **tokens, **paths;
+	char **tokens;
 	int status = 1;
 	const char *delim = " ";
 	char *pathcommand;
