@@ -12,16 +12,13 @@ int main(int argc, char **argv)
 {
 	size_t size = 0;
 	char *lineptr = NULL;
-	char **tokens;
+	char **tokens, **paths;
 	int status = 1;
 	const char *delim = " ";
-	char *path;
+	char *pathcommand;
 	(void)(argc);
 
 
-
-	printf("%s\n", append_path("bin","ls"));
-	return (1);
 	while (status)
 	{
 		if (isatty(STDIN_FILENO))
@@ -32,16 +29,21 @@ int main(int argc, char **argv)
 		{
 			free(lineptr);
 			if (feof(stdin))
-				exit(EXIT_SUCCESS);	
+				exit(EXIT_SUCCESS);
 			perror(argv[0]);
 			exit(EXIT_FAILURE);
 		}
 
-		*(lineptr + (strlen(lineptr) - 1)) = '\0';	
+		*(lineptr + (strlen(lineptr) - 1)) = '\0';
 		tokens = tokenize_str(lineptr, delim);
-		
+
+
 		if (tokens[0] != NULL)
-			execute_cmd(argv, tokens);
+		{
+			pathcommand = access_path(tokens[0]);
+			execute_cmd(argv, pathcommand, tokens);
+			free(pathcommand);
+		}
 		free(tokens);
 	}
 	free(lineptr);

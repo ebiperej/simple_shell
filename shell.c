@@ -4,9 +4,10 @@
  * execute_cmd - execute command
  * @argv: argument vector
  * @tokens: tokens
+ * @command: command
  * Return: 1 on success
  */
-int execute_cmd(char **argv, char **tokens)
+int execute_cmd(char **argv, char *command, char **tokens)
 {
 	pid_t pid;
 
@@ -18,7 +19,7 @@ int execute_cmd(char **argv, char **tokens)
 	}
 	else if (pid == 0)
 	{
-		if (execve(tokens[0], tokens, NULL) == -1)
+		if (execve(command, tokens, NULL) == -1)
 		{
 			perror(argv[0]);
 			exit(EXIT_FAILURE);
@@ -63,7 +64,8 @@ char **tokenize_str(char *str, const char *delim)
  */
 char *append_path(char *path, char *command)
 {
-	int i, j = 0;
+	int i = 0;
+	int j = 0;
 	char *buf;
 
 	buf = malloc(sizeof(char) * (strlen(path) + strlen(command) + 2));
@@ -84,13 +86,13 @@ char *append_path(char *path, char *command)
 		i++;
 	}
 
-	/* append command to the buf */ 
+	/* append command to the buf */
 	while (command[j] != '\0')
 	{
 		buf[i + j] = command[j];
 		j++;
 	}
-	
+
 	buf[i + j] = '\0';
 
 	return (buf);
@@ -101,26 +103,45 @@ char *append_path(char *path, char *command)
  * access_path - check if process can execute command in path
  * @command: entered command
  *
- * Return: buffer to executable file path on success
- * Null on failure
+ * Return: buffer to executable file path
  */
 char *access_path(char *command)
 {
-	char *paths, *path, *appended_buf;
+	char **paths, *path;
+	int i = 0;
 
-	paths = strdup(getenv("PATH"));
+	paths = get_paths();
 
-	path = strtok(paths, ":");
-
-	while (path != NULL)
+	while (paths[i])
 	{
-		appended_buf = append_path(path, command);
+	path = append_path(paths[i], command);
 
-		if (access(appended_buf, F_OK | X_OK))
-			return (appended_buf);
-		
-		path = strtok(NULL, ":");
+		if (access(path, F_OK | X_OK) == 0)
+		{
+			free(paths);
+			return (path);
+		}
+		free(path);
+		i++;
 	}
-	return ("dfad");
+	free(paths);
+	path = append_path("", command);
+	return (path);
 }
 
+
+/**
+ * get_paths - get environment paths
+ * Return: return array of paths
+ */
+char **get_paths()
+{
+	char **paths;
+	char *env_path;
+
+	env_path = strdup(getenv("PATH"));
+
+	paths = tokenize_str(env_path, ":");
+
+	return (paths);
+}
